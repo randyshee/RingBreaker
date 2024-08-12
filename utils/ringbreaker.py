@@ -38,11 +38,11 @@ class Model:
     """
     def __init__(self, dataset="uspto_ringbreaker", mask=True):
         directory = os.getcwd()
-        self.models = {"uspto_ringbreaker": os.path.join(directory, "models/checkpoints/weights.hdf5"),
-                       "uspto_standard": os.path.join(directory,"models/uspto_standard/weights.hdf5"),
+        self.models = {"uspto_ringbreaker": os.path.join(directory, "RingBreaker/models/checkpoints/weights.hdf5"),
+                       "uspto_standard": os.path.join(directory,"RingBreaker/models/uspto_standard/weights.hdf5"),
         }
-        self.templates = {"uspto_ringbreaker": os.path.join(directory,"data/uspto_ringformations.csv"),
-                          "uspto_standard": os.path.join(directory,"data/standard_uspto_template_library.csv"),
+        self.templates = {"uspto_ringbreaker": os.path.join(directory,"RingBreaker/data/uspto_ringformations.csv"),
+                          "uspto_standard": os.path.join(directory,"RingBreaker/data/standard_uspto_template_library.csv"),
         }
         if 'filtered' in dataset:
             dataset = '_'.join(dataset.split('_')[:2])
