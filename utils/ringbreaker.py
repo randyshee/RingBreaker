@@ -30,6 +30,7 @@ from rdkit.Chem.Draw.MolDrawing import MolDrawing, DrawingOptions #Only needed i
 
 import sys
 from rdchiral import main as rdc
+from pathlib import Path
 
 class Model:
     """
@@ -37,12 +38,12 @@ class Model:
     Can only be used for the predicition of single synthetic steps for a given ring system.
     """
     def __init__(self, dataset="uspto_ringbreaker", mask=True):
-        directory = os.getcwd()
-        self.models = {"uspto_ringbreaker": os.path.join(directory, "RingBreaker/models/checkpoints/weights.hdf5"),
-                       "uspto_standard": os.path.join(directory,"RingBreaker/models/uspto_standard/weights.hdf5"),
+        directory = Path(__file__).parent.parent
+        self.models = {"uspto_ringbreaker": directory / "models/checkpoints/weights.hdf5",
+                       "uspto_standard": directory / "models/uspto_standard/weights.hdf5",
         }
-        self.templates = {"uspto_ringbreaker": os.path.join(directory,"RingBreaker/data/uspto_ringformations.csv"),
-                          "uspto_standard": os.path.join(directory,"RingBreaker/data/standard_uspto_template_library.csv"),
+        self.templates = {"uspto_ringbreaker": directory / "data/uspto_ringformations.csv",
+                          "uspto_standard": directory / "data/standard_uspto_template_library.csv",
         }
         if 'filtered' in dataset:
             dataset = '_'.join(dataset.split('_')[:2])
@@ -80,7 +81,9 @@ class Model:
         top50_acc = functools.partial(keras.metrics.top_k_categorical_accuracy, k=50)
         top50_acc.__name__ = 'top50_acc'
         
-        self.policy = load_model(self.model, custom_objects={'top10_acc': top10_acc, 'top50_acc': top50_acc})
+        self.policy = load_model(self.model, compile=False)
+        self.policy.compile(metrics=[top10_acc, top50_acc])
+        # self.policy = load_model(self.model, custom_objects={'top10_acc': top10_acc, 'top50_acc': top50_acc})
 
     def smiles_to_ecfp(self, product, size=2048):
         """Converts a single SMILES into an ECFP4
