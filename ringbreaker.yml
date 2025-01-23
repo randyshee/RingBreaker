@@ -4,13 +4,13 @@ channels:
   - defaults
   - conda-forge
 dependencies:
-  - numpy=1.18.1
-  - pandas=1.0.1
-  - rdkit=2019.09.3
-  - scikit-learn=0.22.1
-  - scipy=1.4.1
+  - numpy=1.26.4
+  - pandas=1.5.3
+  - rdkit=2023.9.3
+  - scikit-learn=1.6.1
+  - scipy=1.15.1
   - swifter=0.302
-  - tensorflow=2.1.0
+  - tensorflow=2.18.0
   - pip:
-    - keras==2.3.1
+    - keras==3.8.0
     - rdchiral==1.0.0

@@ -99,7 +99,11 @@ class Model:
         ecfp = AllChem.GetMorganFingerprintAsBitVect(mol, 2, nBits = 2048)
         arr = np.zeros((0,), dtype=np.int8)
         cDataStructs.ConvertToNumpyArray(ecfp, arr)
-        return arr.reshape([1,2048])
+        # return arr.reshape([1,2048])
+        ecfp = arr.reshape([1,2048])
+        ecfp = ecfp.astype(np.float32) # Add this line
+        ecfp = ecfp.reshape(1, 1, -1) # Reshape to (1, 1, 2048)
+        return ecfp
 
     def get_templates(self, prediction, lib, topN=50):
         """Given a prediction and the template library, obtains the top N predicted templates
@@ -146,9 +150,9 @@ class Model:
         prediction = self.policy.predict(self.smiles_to_ecfp(target))
         if self.mask:
             prediction = np.multiply(prediction, self.filter_array)
-            return prediction
+            return prediction[0]
         else:
-            return prediction
+            return prediction[0]
 
     def predict_ring_outcomes(self, target, cutoff=50):
         """Given a SMILES predicts the top N ring forming reactions and returns the results as a dictionary
